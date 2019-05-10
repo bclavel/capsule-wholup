@@ -8,11 +8,11 @@ export default function(contactList = [], action) {
 
   var randomColor
   var randomNumber = Math.random()
-  if (0 < randomNumber <= 0.24 ) {
+  if (randomNumber < 0.25 ) {
     randomColor = '#e67e22'
-  } else if (0.25 <= randomNumber <= 0.49 ) {
+  } else if (randomNumber < 0.5 ) {
     randomColor = '#3498db'
-  } else if (0.5 <= randomNumber <= 0.74 ) {
+  } else if (randomNumber < 0.75 ) {
     randomColor = '#16a085'
   } else {
     randomColor = '#e74c3c'
