@@ -3,8 +3,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
+import {connect} from 'react-redux';
 
-export default class SignInScreen extends React.Component {
+
+class SignInScreen extends React.Component {
   constructor(props) {
   super(props);
   this.state = {
@@ -23,7 +25,9 @@ handleSubmit() {
   })
   .then(function(data) {
     if (data.result) {
+      ctx.props.handleUserValid(data.user.firstName, data.user.lastName, data.user.email, data.user.token)
       ctx.props.navigation.navigate('Account')
+      console.log('data fetch de signin >>', data);
     } else {
       ctx.setState({displayError : true})
     }
@@ -38,7 +42,7 @@ handleSubmit() {
  render() {
    var errorMsg
    if (this.state.displayError) {
-     errorMsg = <FormValidationMessage>Une erreur d'identification à eu lieu, ça dégage</FormValidationMessage>
+     errorMsg = <FormValidationMessage>Erreur d'identification magl, ça dégage</FormValidationMessage>
    }
    return (
      <View style={{ flex: 1, backgroundColor:'#fff', alignItems: 'center', justifyContent: 'center'}}>
@@ -53,6 +57,7 @@ handleSubmit() {
           onChangeText={(value) => this.setState({password : value})}
           value={this.state.password}
           containerStyle={styles.formBorder}
+          secureTextEntry={true}
         />
         {errorMsg}
       <Button large title="Sign In" backgroundColor='#3498db' textStyle={styles.homeBtn} containerViewStyle={{margin: 20}} onPress={this.handleSubmit} />
@@ -70,3 +75,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   }
 });
+
+function mapDispatchToProps(dispatch) {
+  console.log('Dispatch Signin >>', dispatch);
+ return {
+  handleUserValid : function(firstNameUser, lastNameUser, emailUser, tokenUser) {
+    dispatch( {
+      type: 'setUserData',
+      firstName : firstNameUser,
+      lastName : lastNameUser,
+      email : emailUser,
+      token : tokenUser
+    })
+  }
+ }
+}
+
+export default connect(null, mapDispatchToProps)(SignInScreen);
